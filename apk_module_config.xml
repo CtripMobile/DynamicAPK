@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ApkModules>
+
+    <Module  packageName="ctrip.android.demo1" resourceId="0x31"/>
+
+    <Module  packageName="ctrip.android.demo2" resourceId="0x36"/>
+
+
+
+</ApkModules>

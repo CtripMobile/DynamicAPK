@@ -1,0 +1,68 @@
+//所有工程都要用的公共配置，由各个子模块直接apply from
+
+
+android {
+	compileSdkVersion 23
+    buildToolsVersion "21.1.2"
+
+    useLibrary 'org.apache.http.legacy'
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 19
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled false
+        }
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    packagingOptions{
+        exclude 'META-INF/MANIFEST.MF'
+        exclude 'META-INF/NOTICE.TXT'
+        exclude 'META-INF/LICENSE.TXT'
+        exclude 'META-INF/LICENSE.TXT'
+        exclude 'META-INF/LICENSE.txt'
+    }
+
+	dexOptions {
+		javaMaxHeapSize "4g"
+        preDexLibraries = false
+    }
+
+    // lint所有选项请单独加入
+    lintOptions {
+        checkReleaseBuilds true
+        abortOnError false
+        check 'NewApi'  //新API
+        showAll true
+        textReport true
+        textOutput file("${ctripRoot}/build-outputs/lint/${project.name}_lint-report.txt")
+        xmlReport true
+        xmlOutput file("${ctripRoot}/build-outputs/lint/${project.name}_lint-report.xml")
+        htmlReport true
+        htmlOutput file("${ctripRoot}/build-outputs/lint/${project.name}_lint-report.html")
+    }
+}
+
+

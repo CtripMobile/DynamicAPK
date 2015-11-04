@@ -1,0 +1,321 @@
+apply plugin: 'com.android.application'
+
+apply from: '../global_config.gradle'
+
+android {
+    signingConfigs {
+        demo {
+            keyAlias 'demo'
+            keyPassword '123456'
+            storePassword '123456'
+            storeFile file('../demo.jks')
+        }
+    }
+
+    defaultConfig {
+        applicationId "ctrip.android.sample"
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.demo
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.demo
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':bundle')
+    if (!solidMode) {
+        compile project(':demo1')
+        compile project(':demo2')
+    }
+}
+
+
+
+//打包后产出物复制到build-outputs目录。apk、manifest、mapping
+task copyReleaseOutputs(type:Copy){
+    from ("$buildDir/outputs/apk/sample-release.apk") {
+        rename 'sample-release.apk', 'demo-base-release.apk'
+    }
+    from "$buildDir/intermediates/manifests/full/release/AndroidManifest.xml"
+    from ("$buildDir/outputs/mapping/release/mapping.txt") {
+        rename 'mapping.txt', 'demo-base-mapping.txt'
+    }
+
+    into new File(rootDir, 'build-outputs')
+}
+
+assembleRelease<<{
+    copyReleaseOutputs.execute()
+}
+
+clean {
+    delete buildDir
+    delete "${rootDir}/build-outputs/demo-base-release.apk"
+    delete "${rootDir}/build-outputs/AndroidManifest.xml"
+    delete "${rootDir}/build-outputs/demo-base-mapping.txt"
+    delete "${rootDir}/build-outputs/demo-mapping-final.txt"
+    delete "${rootDir}/build-outputs/demo-release-reloaded.apk"
+    delete "${rootDir}/build-outputs/demo-release-resigned.apk"
+    delete "${rootDir}/build-outputs/demo-release-repacked.apk"
+    delete "${rootDir}/build-outputs/demo-release-final.apk"
+}
+
+import org.apache.tools.ant.taskdefs.condition.Os
+
+def getZipAlignPath(){
+    def zipAlignPath = "${android.sdkDirectory}/build-tools/${android.buildToolsVersion}/zipalign"
+    if(Os.isFamily(Os.FAMILY_WINDOWS)){
+        zipAlignPath += '.exe'
+    }
+    assert (new File(zipAlignPath)).exists() : '没有找到zipalign应用程序！'
+
+    return zipAlignPath
+}
+
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
+import java.util.zip.ZipOutputStream
+
+// 打包过程中很多手工zip过程：
+// 1，为了压缩resources.arsc文件而对标准产出包重新压缩
+// 2，以及各子apk的纯手打apk包
+// 但对于音频等文件，压缩会导致资源加载报异常
+// 重新打包方法，使用STORED过滤掉不应该压缩的文件们
+// 后缀名列表来自于android源码
+def repackApk(originApk, targetApk){
+    def noCompressExt = [".jpg", ".jpeg", ".png", ".gif",
+                         ".wav", ".mp2", ".mp3", ".ogg", ".aac",
+                         ".mpg", ".mpeg", ".mid", ".midi", ".smf", ".jet",
+                         ".rtttl", ".imy", ".xmf", ".mp4", ".m4a",
+                         ".m4v", ".3gp", ".3gpp", ".3g2", ".3gpp2",
+                         ".amr", ".awb", ".wma", ".wmv"]
+
+    ZipFile zipFile = new ZipFile(originApk)
+    ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(targetApk)))
+    zipFile.entries().each{ entryIn ->
+        if(entryIn.directory){
+            println "${entryIn.name} is a directory"
+        }
+        else{
+            def entryOut = new ZipEntry(entryIn.name)
+            def dotPos = entryIn.name.lastIndexOf('.')
+            def ext = (dotPos >= 0) ? entryIn.name.substring(dotPos) : ""
+            def isRes = entryIn.name.startsWith('res/')
+            if(isRes && ext in noCompressExt){
+                entryOut.method = ZipEntry.STORED
+                entryOut.size = entryIn.size
+                entryOut.compressedSize = entryIn.size
+                entryOut.crc = entryIn.crc
+            }
+            else{
+                entryOut.method = ZipEntry.DEFLATED
+            }
+            zos.putNextEntry(entryOut)
+            zos << zipFile.getInputStream(entryIn)
+            zos.closeEntry()
+        }
+    }
+    zos.finish()
+    zos.close()
+    zipFile.close()
+}
+
+// multidex默认会把manifest中注册的所有组件以及它们的直接引用类放在主dex里，
+// 以保证至少在查找组件的时候涉及到的类加载正确。
+// 但第一级+第二级已经会导致主dex超标。
+// 所以在此hack修改CreateManifestKeepList类，让它不要顾忌activity、service、receiver
+// 以保障主dex足够小不至于爆掉
+def patchKeepSpecs() {
+    def taskClass = "com.android.build.gradle.internal.tasks.multidex.CreateManifestKeepList";
+    def clazz = this.class.classLoader.loadClass(taskClass)
+    def keepSpecsField = clazz.getDeclaredField("KEEP_SPECS")
+    keepSpecsField.setAccessible(true)
+    def keepSpecsMap = (Map) keepSpecsField.get(null)
+    if (keepSpecsMap.remove("activity") != null) {
+        // println "KEEP_SPECS patched: removed 'activity' root"
+    } else {
+        // println "Failed to patch KEEP_SPECS: no 'activity' root found"
+    }
+    if (keepSpecsMap.remove("service") != null) {
+        // println "KEEP_SPECS patched: removed 'service' root"
+    } else {
+        // println "Failed to patch KEEP_SPECS: no 'service' root found"
+    }
+    if (keepSpecsMap.remove("receiver") != null) {
+        // println "KEEP_SPECS patched: removed 'receiver' root"
+    } else {
+        // println "Failed to patch KEEP_SPECS: no 'receiver' root found"
+    }
+}
+patchKeepSpecs()
+
+
+// dex命令默认保障方法数索引不超过65535，
+// 但在编译期pass掉第一关的dex，有可能在运行期卡在dexopt上，
+// 所以指定最大index数50000，远小于65535，安全第一。
+afterEvaluate {
+    // println tasks.withType(com.android.build.gradle.tasks.Dex)
+
+    tasks.matching {
+        it.name.startsWith('dex')
+    }.each { dx ->
+        // println "found dex task $dx.name, add parameters"
+        if (dx.additionalParameters == null) {
+            dx.additionalParameters = []
+        }
+//        dx.additionalParameters += '--minimal-main-dex'
+        dx.additionalParameters += '--set-max-idx-number=50000'
+    }
+}
+
+
+//base apk的assets中填充各子apk
+//输入：Ctrip-base-release.apk
+//输出：Ctrip-release-reloaded.apk
+task reload(type:Zip){
+    inputs.file  "$rootDir/build-outputs/demo-base-release.apk"
+    inputs.files fileTree(new File(rootDir,'build-outputs')).include('*.so')
+    outputs.file "$rootDir/build-outputs/demo-release-reloaded.apk"
+
+    into 'assets/baseres/',{
+        from fileTree(new File(rootDir,'build-outputs')).include('*.so')
+    }
+
+    from zipTree("$rootDir/build-outputs/demo-base-release.apk"), {
+        exclude('**/META-INF/*.SF')
+        exclude('**/META-INF/*.RSA')
+    }
+
+    destinationDir file("$rootDir/build-outputs/")
+
+    archiveName 'demo-release-reloaded.apk'
+}
+
+//对apk重新压缩，调整各文件压缩比到正确
+//输入：Ctrip-release-reloaded.apk
+//输出：Ctrip-release-repacked.apk
+task repack (dependsOn: 'reload') {
+    inputs.file "$rootDir/build-outputs/demo-release-reloaded.apk"
+    outputs.file "$rootDir/build-outputs/demo-release-repacked.apk"
+
+    doLast{
+        println "release打包之后，重新压缩一遍，以压缩resources.arsc"
+
+        def oldApkFile = file("$rootDir/build-outputs/demo-release-reloaded.apk")
+
+        assert oldApkFile != null : "没有找到release包！"
+
+        def newApkFile = new File(oldApkFile.parentFile, 'demo-release-repacked.apk')
+
+        //重新打包
+        repackApk(oldApkFile.absolutePath, newApkFile.absolutePath)
+
+        assert newApkFile.exists() : "没有找到重新压缩的release包！"
+    }
+}
+
+//对apk重签名
+//输入：Ctrip-release-repacked.apk
+//输出：Ctrip-release-resigned.apk
+task resign(type:Exec,dependsOn: 'repack'){
+    inputs.file "$rootDir/build-outputs/demo-release-repacked.apk"
+    outputs.file "$rootDir/build-outputs/demo-release-resigned.apk"
+
+    workingDir "$rootDir/build-outputs"
+    executable "${System.env.'JAVA_HOME'}/bin/jarsigner"
+
+    def argv = []
+    argv << '-verbose'
+    argv << '-sigalg'
+    argv << 'SHA1withRSA'
+    argv << '-digestalg'
+    argv << 'SHA1'
+    argv << '-keystore'
+    argv << "$rootDir/demo.jks"
+    argv << '-storepass'
+    argv << '123456'
+    argv << '-keypass'
+    argv << '123456'
+    argv << '-signedjar'
+    argv << 'demo-release-resigned.apk'
+    argv << 'demo-release-repacked.apk'
+    argv << 'demo'
+
+    args = argv
+}
+
+
+//重新对jar包做对齐操作
+//输入：Ctrip-release-resigned.apk
+//输出：Ctrip-release-final.apk
+task realign (dependsOn: 'resign') {
+    inputs.file "$rootDir/build-outputs/demo-release-resigned.apk"
+    outputs.file "$rootDir/build-outputs/demo-release-final.apk"
+
+    doLast{
+        println '重新zipalign，还可以加大压缩率!'
+
+        def oldApkFile = file("$rootDir/build-outputs/demo-release-resigned.apk")
+        assert oldApkFile != null : "没有找到release包！"
+
+        def newApkFile = new File(oldApkFile.parentFile,'demo-release-final.apk')
+
+        def cmdZipAlign = getZipAlignPath()
+        def argv = []
+        argv << '-f'    //overwrite existing outfile.zip
+        // argv << '-z'    //recompress using Zopfli
+        argv << '-v'    //verbose output
+        argv << '4'     //alignment in bytes, e.g. '4' provides 32-bit alignment
+        argv << oldApkFile.absolutePath
+        argv << newApkFile.absolutePath
+
+        project.exec {
+            commandLine cmdZipAlign
+            args argv
+        }
+
+        assert newApkFile.exists() : "没有找到重新zipalign的release包！"
+    }
+}
+
+/**
+ * 用来连接文件的task
+ */
+class ConcatFiles extends DefaultTask {
+    @InputFiles
+    FileCollection sources
+
+    @OutputFile
+    File target
+
+    @TaskAction
+    void concat() {
+        File tmp = File.createTempFile('concat', null, target.getParentFile())
+        tmp.withWriter { writer ->
+            sources.each { file ->
+                file.withReader { reader ->
+                    writer << reader
+                }
+            }
+        }
+        target.delete()
+        tmp.renameTo(target)
+    }
+}
+
+//合并base和所有模块的mapping文件
+task concatMappings(type: ConcatFiles){
+    sources = fileTree(new File(rootDir,'build-outputs')).include('*mapping.txt')
+    target = new File(rootDir,'build-outputs/demo-mapping-final.txt')
+}
+
+task repackAll(dependsOn: ['reload','resign','repack','realign','concatMappings'])

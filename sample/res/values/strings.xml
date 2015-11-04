@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">sample</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="sample_text">This is sample  resource:</string>
+</resources>

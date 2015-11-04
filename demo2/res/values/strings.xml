@@ -1,0 +1,7 @@
+<resources>
+    <string name="demo2_app_name">demo2</string>
+
+    <string name="demo2_hello_world">Hello,I am Demo2!</string>
+    <string name="demo2_action_settings">Settings</string>
+    <string name="demo2_image_text">This is the demo2 image resource:</string>
+</resources>

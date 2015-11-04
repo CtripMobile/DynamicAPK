@@ -1,0 +1,25 @@
+if(solidMode){
+    project.ext {
+        packageName = 'ctrip.android.demo2'
+        apkName = packageName.replace('.', '_')
+    }
+    apply from: '../sub-project-build.gradle'
+}else {
+    apply plugin: 'com.android.library'
+    apply from: '../global_config.gradle'
+    android {
+        compileSdkVersion 23
+        buildToolsVersion "23.0.0"
+
+        defaultConfig {
+
+            versionCode 1
+            versionName "1.0"
+        }
+
+    }
+    dependencies {
+        compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    }
+}

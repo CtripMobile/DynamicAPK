@@ -1,0 +1,201 @@
+
+buildscript {
+    repositories {
+         mavenCentral()
+    }
+    dependencies {
+        classpath 'net.sf.proguard:proguard-gradle:5.2.1'
+    }
+}
+
+import org.apache.tools.ant.taskdefs.condition.Os
+project.ext {
+    BUILD_TOOLS_VERSION = '21.1.2'
+    TARGET_SDK_VERSION = 23
+
+    sdk = [:]
+    if(Os.isFamily(Os.FAMILY_WINDOWS)){
+        sdk.aapt = "${rootDir}/aapt_win.exe"
+        sdk.dex = "$sdkDir/build-tools/$BUILD_TOOLS_VERSION/dx.bat"
+    }
+    else if (Os.isFamily(Os.FAMILY_MAC)){
+        sdk.aapt = "${rootDir}/aapt_mac"
+        sdk.dex = "$sdkDir/build-tools/$BUILD_TOOLS_VERSION/dx"
+    }
+    else if (Os.isFamily(Os.FAMILY_UNIX)){
+        sdk.aapt = "${rootDir}/aapt_linux"
+        sdk.dex = "$sdkDir/build-tools/$BUILD_TOOLS_VERSION/dx"
+    }
+    sdk.androidJar = "$sdkDir/platforms/android-$TARGET_SDK_VERSION/android.jar"
+    if(TARGET_SDK_VERSION >= 23){
+        sdk.apacheJar = "$sdkDir/platforms/android-23/optional/org.apache.http.legacy.jar";
+    }
+}
+
+//初始化，确保必要目录都存在
+task init << {
+    new File(rootDir, 'build-outputs').mkdirs()
+
+    buildDir.mkdirs()
+
+    new File(buildDir, 'gen/r').mkdirs()
+
+    new File(buildDir, 'intermediates').mkdirs()
+
+    new File(buildDir, 'intermediates/classes').mkdirs()
+
+    new File(buildDir, 'intermediates/classes-obfuscated').mkdirs()
+
+    new File(buildDir, 'intermediates/res').mkdirs()
+
+    new File(buildDir, 'intermediates/dex').mkdirs()
+
+
+}
+
+
+//清除build产出物
+task clean (type:Delete) {
+    delete buildDir
+    delete "${rootDir}/build-outputs/${apkName}-mapping.txt"
+    delete "${rootDir}/build-outputs/${apkName}.so"
+}
+
+task aaptRelease (type: Exec,dependsOn:'init'){
+
+
+    inputs.file "$sdk.androidJar"
+    inputs.file "${rootDir}/build-outputs/demo-base-release.apk"
+    inputs.file "$projectDir/AndroidManifest.xml"
+    inputs.dir "$projectDir/res"
+    inputs.dir "$projectDir/assets"
+    inputs.file "${rootDir}/sample/build/generated/source/r/release/ctrip/android/sample/R.java"
+
+    outputs.dir "$buildDir/gen/r"
+    outputs.file "$buildDir/intermediates/res/resources.zip"
+    outputs.file "$buildDir/intermediates/res/aapt-rules.txt"
+
+    workingDir buildDir
+    executable sdk.aapt
+
+    def resourceId=''
+    def parseApkXml=(new XmlParser()).parse(new File(rootDir,'apk_module_config.xml'))
+    parseApkXml.Module.each{ module->
+        if( module.@packageName=="${packageName}") {
+            resourceId=module.@resourceId
+            println "find packageName: " + module.@packageName + " ,resourceId:" + resourceId
+        }
+    }
+    def argv = []
+    argv << 'package'   //打包
+    argv << "-v"
+    argv << '-f' //强制覆盖已有文件
+    argv << "-I"
+    argv << "$sdk.androidJar"        //添加一个已有的固化jar包
+    argv << '-I'
+    argv << "${rootDir}/build-outputs/demo-base-release.apk"
+    argv << '-M'
+    argv << "$projectDir/AndroidManifest.xml"    //指定manifest文件
+    argv << '-S'
+    argv << "$projectDir/res"                    //res目录
+    argv << '-A'
+    argv << "$projectDir/assets"                 //assets目录
+    argv << '-m'        //make package directories under location specified by -J
+    argv << '-J'
+    argv << "$buildDir/gen/r"         //哪里输出R.java定义
+    argv << '-F'
+    argv << "$buildDir/intermediates/res/resources.zip"   //指定apk的输出位置
+    argv << '-G'        //-G  A file to output proguard options into.
+    argv << "$buildDir/intermediates/res/aapt-rules.txt"
+    // argv << '--debug-mode'      //manifest的application元素添加android:debuggable="true"
+    argv << '--custom-package'      //指定R.java生成的package包名
+    argv << "${packageName}"
+    argv << '-0'    //指定哪些后缀名不会被压缩
+    argv << 'apk'
+    argv << '--public-R-path'
+    argv << "${rootDir}/sample/build/generated/source/r/release/ctrip/android/sample/R.java"
+    argv << '--apk-module'
+    argv << "$resourceId"
+
+    args = argv
+
+}
+
+task compileRelease(type: JavaCompile,dependsOn:'aaptRelease') {
+    inputs.file "$sdk.androidJar"
+    inputs.files fileTree("${projectDir}/libs").include('*.jar')
+    inputs.file "${rootDir}/sample/build/intermediates/classes-proguard/release/classes.jar"
+    inputs.files fileTree("$projectDir/src").include('**/*.java')
+    inputs.files fileTree("$buildDir/gen/r").include('**/*.java')
+
+    outputs.dir "$buildDir/intermediates/classes"
+    sourceCompatibility = '1.6'
+    targetCompatibility = '1.6'
+    classpath = files(
+            "${sdk.androidJar}",
+            "${sdk.apacheJar}",
+    	    fileTree("${projectDir}/libs").include('*.jar'),
+
+    	
+    	    "${rootDir}/sample/build/intermediates/classes-proguard/release/classes.jar"
+    	)
+
+    destinationDir = file("$buildDir/intermediates/classes")
+
+    dependencyCacheDir = file("${buildDir}/dependency-cache")
+
+    source = files(fileTree("$projectDir/src").include('**/*.java'),
+            fileTree("$buildDir/gen/r").include('**/*.java'))
+    options.encoding = 'UTF-8'
+}
+
+task obfuscateRelease(type:proguard.gradle.ProGuardTask, dependsOn:'compileRelease') {
+    inputs.file "$rootDir/sub-project-proguard-rules.txt"
+    inputs.file "$buildDir/intermediates/res/aapt-rules.txt"
+    inputs.dir "$buildDir/intermediates/classes"
+    inputs.files fileTree("${projectDir}/libs").include('*.jar')
+    inputs.file "${sdk.androidJar}"
+    inputs.file "${rootDir}/sample/build/intermediates/classes-proguard/release/classes.jar"
+
+    outputs.file "$buildDir/intermediates/classes-obfuscated/classes-obfuscated.jar"
+    outputs.file "${rootDir}/build-outputs/${apkName}-mapping.txt"
+    configuration file("$rootDir/sub-project-proguard-rules.txt")
+    configuration file ("$buildDir/intermediates/res/aapt-rules.txt")
+    injars file("$buildDir/intermediates/classes")
+    injars fileTree("${projectDir}/libs").include('*.jar')
+
+    outjars file("$buildDir/intermediates/classes-obfuscated/classes-obfuscated.jar")
+    printmapping file("${rootDir}/build-outputs/${apkName}-mapping.txt")
+
+    libraryjars file("${sdk.androidJar}")
+    libraryjars file("${rootDir}/sample/build/intermediates/classes-proguard/release/classes.jar")
+
+}
+
+task dexRelease (type:Exec){
+    inputs.file "${buildDir}/intermediates/classes"
+    outputs.file "${buildDir}/intermediates/dex/${project.name}_dex.zip"
+    workingDir buildDir
+    executable sdk.dex
+
+    def argv = []
+    argv << '--dex'
+    argv << "--output=${buildDir}/intermediates/dex/${project.name}_dex.zip"
+    argv << "${buildDir}/intermediates/classes"
+
+    args = argv
+}
+
+task bundleRelease (type:Zip,dependsOn:['compileRelease','aaptRelease','dexRelease']){
+    inputs.file "$buildDir/intermediates/dex/${project.name}_dex.zip"
+    inputs.file "$buildDir/intermediates/res/resources.zip"
+
+    outputs.file "${rootDir}/build-outputs/${apkName}.so"
+
+    archiveName = "${apkName}.so"
+    destinationDir = file("${rootDir}/build-outputs")
+    duplicatesStrategy = 'fail'
+    from zipTree("$buildDir/intermediates/dex/${project.name}_dex.zip")
+    from zipTree("$buildDir/intermediates/res/resources.zip")
+}
+
