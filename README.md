@@ -17,3 +17,4 @@ To build:
 - $ git clone https://github.com/CtripMobile/DynamicAPK.git
 - $ cd DynamicAPK/
 - $ gradle assembleRelease bundleRelease repackAll
+- Release APK in /build-outputs/***-release-final.apk
