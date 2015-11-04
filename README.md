@@ -2,7 +2,7 @@
 
 ---
 携程App的插件化和动态加载框架已上线半年，经历了初期的探索和持续的打磨优化，新框架和工程配置经受住了生产实践的考验。
-Android DynamicApk 框架实现了多APK动态加载和HotFix解决方案，通过对aapt的修改实现资源分区，各个模块可以单独的配置资源的PackageID，做到真正的独立APK模块化。
+Android DynamicApk 框架实现了多APK动态加载和HotFix解决方案，通过对aapt的修改实现资源分区，各个模块可以单独的配置资源的PackageID，做到真正的独立APK模块化。详见：[《携程Android App插件化和动态加载实践》](http://mp.weixin.qq.com/s?__biz=MzAwMTcwNTE0NA==&mid=400217391&idx=1&sn=86181541ce0164156dfab135ed99bb5c&scene=1&srcid=1104yOOxo7c2fr3ooaz9Pcv5#rd)
 
 #Benifit
 - 插件化架构适应开发节奏需求，不但从代码层面，更从项目控制层面做到了高内聚低耦合，极大降低了沟通成本，提高了工作效率。
@@ -11,7 +11,6 @@ Android DynamicApk 框架实现了多APK动态加载和HotFix解决方案，通�
 - ABTesting脱离古老丑陋的if/else实现，多套方案随心挑选按需加载。
 - 编译速度大大提高，各BU只需使用宿主的编译成果更新编译自己子工程部分，分分钟搞定。
 - App宿主apk大大减小，各业务模块按需后台加载或者延迟懒加载，启动速度优化，告别黑屏和启动ANR。
-
 
 #Build
 To build:
