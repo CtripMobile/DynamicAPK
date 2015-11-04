@@ -15,6 +15,6 @@ Android DynamicApk 框架实现了多APK动态加载和HotFix解决方案，通�
 
 #Build
 To build:
-$ git clone https://github.com/CtripMobile/DynamicAPK.git
-$ cd DynamicAPK/
-$ gradle assembleRelease bundleRelease repackAll
+- $ git clone https://github.com/CtripMobile/DynamicAPK.git
+- $ cd DynamicAPK/
+- $ gradle assembleRelease bundleRelease repackAll
