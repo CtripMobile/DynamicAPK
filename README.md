@@ -11,6 +11,8 @@ Android DynamicApk 框架实现了多APK动态加载和HotFix解决方案，通�
 - ABTesting脱离古老丑陋的if/else实现，多套方案随心挑选按需加载。
 - 编译速度大大提高，各BU只需使用宿主的编译成果更新编译自己子工程部分，分分钟搞定。
 - App宿主apk大大减小，各业务模块按需后台加载或者延迟懒加载，启动速度优化，告别黑屏和启动ANR。
+
+
 #Build
 To build:
 $ git clone https://github.com/CtripMobile/DynamicAPK.git
