@@ -1,0 +1,234 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		D4F059D01AFC4DC2007FAE8A /* AaptAssets.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AaptAssets.cpp; sourceTree = "<group>"; };
+		D4F059D11AFC4DC2007FAE8A /* AaptAssets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AaptAssets.h; sourceTree = "<group>"; };
+		D4F059D21AFC4DC2007FAE8A /* AaptConfig.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AaptConfig.cpp; sourceTree = "<group>"; };
+		D4F059D31AFC4DC2007FAE8A /* AaptConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AaptConfig.h; sourceTree = "<group>"; };
+		D4F059D41AFC4DC2007FAE8A /* AaptUtil.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AaptUtil.cpp; sourceTree = "<group>"; };
+		D4F059D51AFC4DC2007FAE8A /* AaptUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AaptUtil.h; sourceTree = "<group>"; };
+		D4F059D61AFC4DC2007FAE8A /* AaptXml.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AaptXml.cpp; sourceTree = "<group>"; };
+		D4F059D71AFC4DC2007FAE8A /* AaptXml.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AaptXml.h; sourceTree = "<group>"; };
+		D4F059D81AFC4DC2007FAE8A /* Android.mk */ = {isa = PBXFileReference; lastKnownFileType = text; path = Android.mk; sourceTree = "<group>"; };
+		D4F059D91AFC4DC2007FAE8A /* ApkBuilder.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ApkBuilder.cpp; sourceTree = "<group>"; };
+		D4F059DA1AFC4DC2007FAE8A /* ApkBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApkBuilder.h; sourceTree = "<group>"; };
+		D4F059DB1AFC4DC2007FAE8A /* Bundle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bundle.h; sourceTree = "<group>"; };
+		D4F059DC1AFC4DC2007FAE8A /* CacheUpdater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CacheUpdater.h; sourceTree = "<group>"; };
+		D4F059DD1AFC4DC2007FAE8A /* Command.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Command.cpp; sourceTree = "<group>"; };
+		D4F059DE1AFC4DC2007FAE8A /* ConfigDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigDescription.h; sourceTree = "<group>"; };
+		D4F059DF1AFC4DC2007FAE8A /* CrunchCache.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CrunchCache.cpp; sourceTree = "<group>"; };
+		D4F059E01AFC4DC2007FAE8A /* CrunchCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CrunchCache.h; sourceTree = "<group>"; };
+		D4F059E11AFC4DC2007FAE8A /* DirectoryWalker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DirectoryWalker.h; sourceTree = "<group>"; };
+		D4F059E21AFC4DC2007FAE8A /* FileFinder.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FileFinder.cpp; sourceTree = "<group>"; };
+		D4F059E31AFC4DC2007FAE8A /* FileFinder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileFinder.h; sourceTree = "<group>"; };
+		D4F059E41AFC4DC2007FAE8A /* Images.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Images.cpp; sourceTree = "<group>"; };
+		D4F059E51AFC4DC2007FAE8A /* Images.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Images.h; sourceTree = "<group>"; };
+		D4F059E61AFC4DC2007FAE8A /* IndentPrinter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IndentPrinter.h; sourceTree = "<group>"; };
+		D4F059E71AFC4DC2007FAE8A /* Main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Main.cpp; sourceTree = "<group>"; };
+		D4F059E81AFC4DC2007FAE8A /* Main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Main.h; sourceTree = "<group>"; };
+		D4F059E91AFC4DC2007FAE8A /* NOTICE */ = {isa = PBXFileReference; lastKnownFileType = text; path = NOTICE; sourceTree = "<group>"; };
+		D4F059EA1AFC4DC2007FAE8A /* OutputSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OutputSet.h; sourceTree = "<group>"; };
+		D4F059EB1AFC4DC2007FAE8A /* Package.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Package.cpp; sourceTree = "<group>"; };
+		D4F059EC1AFC4DC2007FAE8A /* printapk.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = printapk.cpp; sourceTree = "<group>"; };
+		D4F059ED1AFC4DC2007FAE8A /* pseudolocalize.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pseudolocalize.cpp; sourceTree = "<group>"; };
+		D4F059EE1AFC4DC2007FAE8A /* pseudolocalize.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pseudolocalize.h; sourceTree = "<group>"; };
+		D4F059EF1AFC4DC2007FAE8A /* qsort_r_compat.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = qsort_r_compat.c; sourceTree = "<group>"; };
+		D4F059F01AFC4DC2007FAE8A /* qsort_r_compat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = qsort_r_compat.h; sourceTree = "<group>"; };
+		D4F059F11AFC4DC2007FAE8A /* Resource.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Resource.cpp; sourceTree = "<group>"; };
+		D4F059F21AFC4DC2007FAE8A /* ResourceFilter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ResourceFilter.cpp; sourceTree = "<group>"; };
+		D4F059F31AFC4DC2007FAE8A /* ResourceFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ResourceFilter.h; sourceTree = "<group>"; };
+		D4F059F41AFC4DC2007FAE8A /* ResourceIdCache.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ResourceIdCache.cpp; sourceTree = "<group>"; };
+		D4F059F51AFC4DC2007FAE8A /* ResourceIdCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ResourceIdCache.h; sourceTree = "<group>"; };
+		D4F059F61AFC4DC2007FAE8A /* ResourceTable.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ResourceTable.cpp; sourceTree = "<group>"; };
+		D4F059F71AFC4DC2007FAE8A /* ResourceTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ResourceTable.h; sourceTree = "<group>"; };
+		D4F059F81AFC4DC2007FAE8A /* RMerge.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RMerge.cpp; sourceTree = "<group>"; };
+		D4F059F91AFC4DC2007FAE8A /* RMerge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMerge.h; sourceTree = "<group>"; };
+		D4F059FA1AFC4DC2007FAE8A /* SourcePos.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SourcePos.cpp; sourceTree = "<group>"; };
+		D4F059FB1AFC4DC2007FAE8A /* SourcePos.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SourcePos.h; sourceTree = "<group>"; };
+		D4F059FC1AFC4DC2007FAE8A /* StringPool.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StringPool.cpp; sourceTree = "<group>"; };
+		D4F059FD1AFC4DC2007FAE8A /* StringPool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StringPool.h; sourceTree = "<group>"; };
+		D4F059FF1AFC4DC2007FAE8A /* AaptConfig_test.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AaptConfig_test.cpp; sourceTree = "<group>"; };
+		D4F05A001AFC4DC2007FAE8A /* AaptGroupEntry_test.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AaptGroupEntry_test.cpp; sourceTree = "<group>"; };
+		D4F05A011AFC4DC2007FAE8A /* CrunchCache_test.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CrunchCache_test.cpp; sourceTree = "<group>"; };
+		D4F05A021AFC4DC2007FAE8A /* FileFinder_test.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FileFinder_test.cpp; sourceTree = "<group>"; };
+		D4F05A031AFC4DC2007FAE8A /* MockCacheUpdater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MockCacheUpdater.h; sourceTree = "<group>"; };
+		D4F05A041AFC4DC2007FAE8A /* MockDirectoryWalker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MockDirectoryWalker.h; sourceTree = "<group>"; };
+		D4F05A051AFC4DC2007FAE8A /* MockFileFinder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MockFileFinder.h; sourceTree = "<group>"; };
+		D4F05A071AFC4DC2007FAE8A /* AndroidManifest.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = AndroidManifest.xml; sourceTree = "<group>"; };
+		D4F05A0A1AFC4DC2007FAE8A /* strings.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = strings.xml; sourceTree = "<group>"; };
+		D4F05A0B1AFC4DC2007FAE8A /* run.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = run.sh; sourceTree = "<group>"; };
+		D4F05A0C1AFC4DC2007FAE8A /* ResourceFilter_test.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ResourceFilter_test.cpp; sourceTree = "<group>"; };
+		D4F05A0D1AFC4DC2007FAE8A /* TestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestHelper.h; sourceTree = "<group>"; };
+		D4F05A0E1AFC4DC2007FAE8A /* WorkQueue.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = WorkQueue.cpp; sourceTree = "<group>"; };
+		D4F05A0F1AFC4DC2007FAE8A /* WorkQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WorkQueue.h; sourceTree = "<group>"; };
+		D4F05A101AFC4DC2007FAE8A /* XMLNode.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XMLNode.cpp; sourceTree = "<group>"; };
+		D4F05A111AFC4DC2007FAE8A /* XMLNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMLNode.h; sourceTree = "<group>"; };
+		D4F05A121AFC4DC2007FAE8A /* ZipEntry.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ZipEntry.cpp; sourceTree = "<group>"; };
+		D4F05A131AFC4DC2007FAE8A /* ZipEntry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZipEntry.h; sourceTree = "<group>"; };
+		D4F05A141AFC4DC2007FAE8A /* ZipFile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ZipFile.cpp; sourceTree = "<group>"; };
+		D4F05A151AFC4DC2007FAE8A /* ZipFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZipFile.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		D4F059C91AFC4DAC007FAE8A = {
+			isa = PBXGroup;
+			children = (
+				D4F059D01AFC4DC2007FAE8A /* AaptAssets.cpp */,
+				D4F059D11AFC4DC2007FAE8A /* AaptAssets.h */,
+				D4F059D21AFC4DC2007FAE8A /* AaptConfig.cpp */,
+				D4F059D31AFC4DC2007FAE8A /* AaptConfig.h */,
+				D4F059D41AFC4DC2007FAE8A /* AaptUtil.cpp */,
+				D4F059D51AFC4DC2007FAE8A /* AaptUtil.h */,
+				D4F059D61AFC4DC2007FAE8A /* AaptXml.cpp */,
+				D4F059D71AFC4DC2007FAE8A /* AaptXml.h */,
+				D4F059D81AFC4DC2007FAE8A /* Android.mk */,
+				D4F059D91AFC4DC2007FAE8A /* ApkBuilder.cpp */,
+				D4F059DA1AFC4DC2007FAE8A /* ApkBuilder.h */,
+				D4F059DB1AFC4DC2007FAE8A /* Bundle.h */,
+				D4F059DC1AFC4DC2007FAE8A /* CacheUpdater.h */,
+				D4F059DD1AFC4DC2007FAE8A /* Command.cpp */,
+				D4F059DE1AFC4DC2007FAE8A /* ConfigDescription.h */,
+				D4F059DF1AFC4DC2007FAE8A /* CrunchCache.cpp */,
+				D4F059E01AFC4DC2007FAE8A /* CrunchCache.h */,
+				D4F059E11AFC4DC2007FAE8A /* DirectoryWalker.h */,
+				D4F059E21AFC4DC2007FAE8A /* FileFinder.cpp */,
+				D4F059E31AFC4DC2007FAE8A /* FileFinder.h */,
+				D4F059E41AFC4DC2007FAE8A /* Images.cpp */,
+				D4F059E51AFC4DC2007FAE8A /* Images.h */,
+				D4F059E61AFC4DC2007FAE8A /* IndentPrinter.h */,
+				D4F059E71AFC4DC2007FAE8A /* Main.cpp */,
+				D4F059E81AFC4DC2007FAE8A /* Main.h */,
+				D4F059E91AFC4DC2007FAE8A /* NOTICE */,
+				D4F059EA1AFC4DC2007FAE8A /* OutputSet.h */,
+				D4F059EB1AFC4DC2007FAE8A /* Package.cpp */,
+				D4F059EC1AFC4DC2007FAE8A /* printapk.cpp */,
+				D4F059ED1AFC4DC2007FAE8A /* pseudolocalize.cpp */,
+				D4F059EE1AFC4DC2007FAE8A /* pseudolocalize.h */,
+				D4F059EF1AFC4DC2007FAE8A /* qsort_r_compat.c */,
+				D4F059F01AFC4DC2007FAE8A /* qsort_r_compat.h */,
+				D4F059F11AFC4DC2007FAE8A /* Resource.cpp */,
+				D4F059F21AFC4DC2007FAE8A /* ResourceFilter.cpp */,
+				D4F059F31AFC4DC2007FAE8A /* ResourceFilter.h */,
+				D4F059F41AFC4DC2007FAE8A /* ResourceIdCache.cpp */,
+				D4F059F51AFC4DC2007FAE8A /* ResourceIdCache.h */,
+				D4F059F61AFC4DC2007FAE8A /* ResourceTable.cpp */,
+				D4F059F71AFC4DC2007FAE8A /* ResourceTable.h */,
+				D4F059F81AFC4DC2007FAE8A /* RMerge.cpp */,
+				D4F059F91AFC4DC2007FAE8A /* RMerge.h */,
+				D4F059FA1AFC4DC2007FAE8A /* SourcePos.cpp */,
+				D4F059FB1AFC4DC2007FAE8A /* SourcePos.h */,
+				D4F059FC1AFC4DC2007FAE8A /* StringPool.cpp */,
+				D4F059FD1AFC4DC2007FAE8A /* StringPool.h */,
+				D4F059FE1AFC4DC2007FAE8A /* tests */,
+				D4F05A0E1AFC4DC2007FAE8A /* WorkQueue.cpp */,
+				D4F05A0F1AFC4DC2007FAE8A /* WorkQueue.h */,
+				D4F05A101AFC4DC2007FAE8A /* XMLNode.cpp */,
+				D4F05A111AFC4DC2007FAE8A /* XMLNode.h */,
+				D4F05A121AFC4DC2007FAE8A /* ZipEntry.cpp */,
+				D4F05A131AFC4DC2007FAE8A /* ZipEntry.h */,
+				D4F05A141AFC4DC2007FAE8A /* ZipFile.cpp */,
+				D4F05A151AFC4DC2007FAE8A /* ZipFile.h */,
+			);
+			sourceTree = "<group>";
+		};
+		D4F059FE1AFC4DC2007FAE8A /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				D4F059FF1AFC4DC2007FAE8A /* AaptConfig_test.cpp */,
+				D4F05A001AFC4DC2007FAE8A /* AaptGroupEntry_test.cpp */,
+				D4F05A011AFC4DC2007FAE8A /* CrunchCache_test.cpp */,
+				D4F05A021AFC4DC2007FAE8A /* FileFinder_test.cpp */,
+				D4F05A031AFC4DC2007FAE8A /* MockCacheUpdater.h */,
+				D4F05A041AFC4DC2007FAE8A /* MockDirectoryWalker.h */,
+				D4F05A051AFC4DC2007FAE8A /* MockFileFinder.h */,
+				D4F05A061AFC4DC2007FAE8A /* plurals */,
+				D4F05A0C1AFC4DC2007FAE8A /* ResourceFilter_test.cpp */,
+				D4F05A0D1AFC4DC2007FAE8A /* TestHelper.h */,
+			);
+			path = tests;
+			sourceTree = "<group>";
+		};
+		D4F05A061AFC4DC2007FAE8A /* plurals */ = {
+			isa = PBXGroup;
+			children = (
+				D4F05A071AFC4DC2007FAE8A /* AndroidManifest.xml */,
+				D4F05A081AFC4DC2007FAE8A /* res */,
+				D4F05A0B1AFC4DC2007FAE8A /* run.sh */,
+			);
+			path = plurals;
+			sourceTree = "<group>";
+		};
+		D4F05A081AFC4DC2007FAE8A /* res */ = {
+			isa = PBXGroup;
+			children = (
+				D4F05A091AFC4DC2007FAE8A /* values */,
+			);
+			path = res;
+			sourceTree = "<group>";
+		};
+		D4F05A091AFC4DC2007FAE8A /* values */ = {
+			isa = PBXGroup;
+			children = (
+				D4F05A0A1AFC4DC2007FAE8A /* strings.xml */,
+			);
+			path = values;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		D4F059CA1AFC4DAC007FAE8A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0620;
+			};
+			buildConfigurationList = D4F059CD1AFC4DAC007FAE8A /* Build configuration list for PBXProject "caapt" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = D4F059C91AFC4DAC007FAE8A;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		D4F059CE1AFC4DAC007FAE8A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		D4F059CF1AFC4DAC007FAE8A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D4F059CD1AFC4DAC007FAE8A /* Build configuration list for PBXProject "caapt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D4F059CE1AFC4DAC007FAE8A /* Debug */,
+				D4F059CF1AFC4DAC007FAE8A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D4F059CA1AFC4DAC007FAE8A /* Project object */;
+}
