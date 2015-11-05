@@ -12,6 +12,10 @@ Android DynamicApk 框架实现了多APK动态加载和HotFix解决方案，通�
 - 编译速度大大提高，各BU只需使用宿主的编译成果更新编译自己子工程部分，分分钟搞定。
 - App宿主apk大大减小，各业务模块按需后台加载或者延迟懒加载，启动速度优化，告别黑屏和启动ANR。
 
+#Modify aapt tool 
+- add command argument ： apk-module. ex: aapt ...... --apk-module 0x58 （ResourceID Of PackageID=0x58）
+- add RMerge.cpp to merge the --public-R-path and module R Path.So the output R file contains the Main apk R and the module apk R.
+
 #Build
 To build:
 - $ git clone https://github.com/CtripMobile/DynamicAPK.git
