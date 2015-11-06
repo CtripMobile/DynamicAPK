@@ -25,4 +25,3 @@ To build:
 
 #Update
 - Add Hotfix solution to patch in App
-- 
