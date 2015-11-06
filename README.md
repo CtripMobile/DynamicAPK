@@ -24,4 +24,4 @@ To build:
 - Release APK in /build-outputs/***-release-final.apk
 
 #Update
-- Add Hotfix solution to patch in App
+- Add Hotfix solution to patch in App, support the hotfix rollback.
