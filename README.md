@@ -22,3 +22,6 @@ To build:
 - $ cd DynamicAPK/
 - $ gradle assembleRelease bundleRelease repackAll
 - Release APK in /build-outputs/***-release-final.apk
+- 
+#Update
+-Add Hotfix solution to patch in App
