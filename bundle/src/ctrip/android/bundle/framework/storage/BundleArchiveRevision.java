@@ -1,7 +1,6 @@
 package ctrip.android.bundle.framework.storage;
 
 import android.content.res.AssetManager;
-import android.os.Build;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -22,21 +21,18 @@ import ctrip.android.bundle.log.Logger;
 import ctrip.android.bundle.log.LoggerFactory;
 import ctrip.android.bundle.runtime.RuntimeArgs;
 import ctrip.android.bundle.util.APKUtil;
-import ctrip.android.bundle.util.StringUtil;
 
 /**
  * Created by yb.wang on 14/12/31.
  * <p/>
  * Bundle 存储文件：bundle.zip，bundle.dex
- * 采用DexFile 加载 dex文件，并opt释放优化后的dex
- * findClass会被BundleClassLoader调用
+ * 采用PathClassLoader 加载 dex文件，并opt释放优化后的dex
  */
 public class BundleArchiveRevision {
     static final Logger log;
     static final String BUNDLE_FILE_NAME = "bundle.zip";
     static final String BUNDEL_DEX_FILE = "bundle.dex";
     static final String FILE_PROTOCOL = "file:";
-    static final String REFERENCE_PROTOCOL = "reference:";
     private final long revisionNum;
     private File revisionDir;
     private File bundleFile;
@@ -45,7 +41,6 @@ public class BundleArchiveRevision {
     static {
         log = LoggerFactory.getLogcatLogger("BundleArchiveRevision");
     }
-
 
     BundleArchiveRevision(long revisionNumber, File file, InputStream inputStream) throws IOException {
         this.revisionNum = revisionNumber;
@@ -60,36 +55,6 @@ public class BundleArchiveRevision {
 
     }
 
-    BundleArchiveRevision(long revisionNumber, File file, File file2) throws IOException {
-        this.revisionNum = revisionNumber;
-        this.revisionDir = file;
-        if (!this.revisionDir.exists()) {
-            this.revisionDir.mkdirs();
-        }
-        if (file2.canWrite()) {
-            if (isSameDir(file, file2)) {
-                this.revisionLocation = FILE_PROTOCOL;
-                this.bundleFile = new File(file, BUNDLE_FILE_NAME);
-                file2.renameTo(this.bundleFile);
-            } else {
-                this.revisionLocation = FILE_PROTOCOL;
-                this.bundleFile = new File(file, BUNDLE_FILE_NAME);
-                APKUtil.copyInputStreamToFile(new FileInputStream(file2), this.bundleFile);
-            }
-        } else if (Build.HARDWARE.toLowerCase().contains("mt6592") && file2.getName().endsWith(".apk")) {
-            this.revisionLocation = FILE_PROTOCOL;
-            this.bundleFile = new File(file, BUNDLE_FILE_NAME);
-            Runtime.getRuntime().exec(String.format("ln -s %s %s", new Object[]{file2.getAbsolutePath(), this.bundleFile.getAbsolutePath()}));
-        } else if (SysHacks.LexFile == null || SysHacks.LexFile.getmClass() == null) {
-            this.revisionLocation = REFERENCE_PROTOCOL + file2.getAbsolutePath();
-            this.bundleFile = file2;
-        } else {
-            this.revisionLocation = FILE_PROTOCOL;
-            this.bundleFile = new File(file, BUNDLE_FILE_NAME);
-            APKUtil.copyInputStreamToFile(new FileInputStream(file2), this.bundleFile);
-        }
-        updateMetaData();
-    }
 
     BundleArchiveRevision(long revisionNumber, File file) throws IOException {
         File fileMeta = new File(file, "meta");
@@ -102,13 +67,9 @@ public class BundleArchiveRevision {
             if (!this.revisionDir.exists()) {
                 this.revisionDir.mkdirs();
             }
-            if (this.revisionLocation.startsWith(REFERENCE_PROTOCOL)) {
-                this.bundleFile = new File(StringUtil.subStringAfter(this.revisionLocation, REFERENCE_PROTOCOL));
-                return;
-            } else {
-                this.bundleFile = new File(file, BUNDLE_FILE_NAME);
-                return;
-            }
+            this.bundleFile = new File(file, BUNDLE_FILE_NAME);
+            return;
+
         }
         throw new IOException("Can not find meta file in " + file.getAbsolutePath());
     }
@@ -132,10 +93,6 @@ public class BundleArchiveRevision {
         }
     }
 
-    private boolean isSameDir(File file, File file2) {
-        return StringUtil.equals(StringUtil.subStringBetween(file.getAbsolutePath(), File.separator, File.separator),
-                StringUtil.subStringBetween(file2.getAbsolutePath(), File.separator, File.separator));
-    }
 
     public long getRevisionNum() {
         return this.revisionNum;
@@ -153,12 +110,13 @@ public class BundleArchiveRevision {
         return new File(this.revisionDir, BUNDEL_DEX_FILE).exists();
     }
 
-    public boolean isBundleInstalled(){
-        if(bundleFile.exists()){
-          return verifyZipFile(bundleFile);
+    public boolean isBundleInstalled() {
+        if (bundleFile.exists()) {
+            return verifyZipFile(bundleFile);
         }
         return false;
     }
+
     private boolean verifyZipFile(File file) {
         try {
             ZipFile zipFile = new ZipFile(file);
@@ -166,20 +124,20 @@ public class BundleArchiveRevision {
                 zipFile.close();
                 return true;
             } catch (IOException e) {
-                log.log("Failed to close zip file: " + file.getAbsolutePath(), Logger.LogLevel.ERROR,e);
+                log.log("Failed to close zip file: " + file.getAbsolutePath(), Logger.LogLevel.ERROR, e);
             }
         } catch (ZipException ex) {
-            log.log("File " + file.getAbsolutePath() + " is not a valid zip file.", Logger.LogLevel.ERROR,ex);
+            log.log("File " + file.getAbsolutePath() + " is not a valid zip file.", Logger.LogLevel.ERROR, ex);
         } catch (IOException ex) {
-            log.log("Got an IOException trying to open zip file: " + file.getAbsolutePath(), Logger.LogLevel.ERROR,ex);
+            log.log("Got an IOException trying to open zip file: " + file.getAbsolutePath(), Logger.LogLevel.ERROR, ex);
         }
         return false;
     }
 
-    public void optDexFile() throws Exception{
-            List<File> files = new ArrayList<File>();
-            files.add(this.bundleFile);
-            BundlePathLoader.installBundleDexs(RuntimeArgs.androidApplication.getClassLoader(), revisionDir, files,false);
+    public void optDexFile() throws Exception {
+        List<File> files = new ArrayList<File>();
+        files.add(this.bundleFile);
+        BundlePathLoader.installBundleDexs(RuntimeArgs.androidApplication.getClassLoader(), revisionDir, files, false);
     }
 
     public InputStream openAssetInputStream(String fileName) throws IOException {

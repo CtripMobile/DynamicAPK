@@ -18,7 +18,6 @@ import ctrip.android.bundle.hack.Hack.HackedField;
 import ctrip.android.bundle.hack.Hack.HackedMethod;
 import ctrip.android.bundle.log.Logger;
 import ctrip.android.bundle.log.LoggerFactory;
-import dalvik.system.DexClassLoader;
 
 /**
  * Created by yb.wang on 14/12/31.
@@ -35,8 +34,6 @@ public class SysHacks extends Hack.HackDeclaration implements Hack.AssertionFail
     public static HackedMethod Application_attach;
     public static HackedClass<android.content.res.AssetManager> AssetManager;
     public static HackedMethod AssetManager_addAssetPath;
-    public static HackedClass<ClassLoader> ClassLoader;
-    public static HackedMethod ClassLoader_findLibrary;
     public static HackedClass<Object> ContextImpl;
     public static HackedField<Object, android.content.res.Resources> ContextImpl_mResources;
     public static HackedField<Object, android.content.res.Resources.Theme> ContextImpl_mTheme;
@@ -46,20 +43,12 @@ public class SysHacks extends Hack.HackDeclaration implements Hack.AssertionFail
     public static HackedField<ContextThemeWrapper, android.content.res.Resources.Theme> ContextThemeWrapper_mTheme;
     public static HackedClass<android.content.ContextWrapper> ContextWrapper;
     public static HackedField<ContextWrapper, Context> ContextWrapper_mBase;
-    public static HackedClass<dalvik.system.DexClassLoader> DexClassLoader;
-    public static HackedMethod DexClassLoader_findClass;
     public static ArrayList<HackedMethod> GeneratePackageInfoList;
     public static ArrayList<HackedMethod> GetPackageInfoList;
     public static HackedClass<Object> IPackageManager;
-    public static HackedClass<Object> LexFile;
-    public static HackedMethod LexFile_close;
-    public static HackedMethod LexFile_loadClass;
-    public static HackedMethod LexFile_loadLex;
     public static HackedClass<Object> LoadedApk;
     public static HackedField<Object, String> LoadedApk_mAppDir;
     public static HackedField<Object, Application> LoadedApk_mApplication;
-    public static HackedField<Object, ClassLoader> LoadedApk_mBaseClassLoader;
-    public static HackedField<Object, ClassLoader> LoadedApk_mClassLoader;
     public static HackedField<Object, String> LoadedApk_mResDir;
     public static HackedField<Object, Resources> LoadedApk_mResources;
     public static HackedClass<Resources> Resources;
@@ -132,9 +121,6 @@ public class SysHacks extends Hack.HackDeclaration implements Hack.AssertionFail
         ContextThemeWrapper = Hack.into(ContextThemeWrapper.class);
         ContextWrapper = Hack.into("android.content.ContextWrapper");
         sIsIgnoreFailure = true;
-        ClassLoader = Hack.into(ClassLoader.class);
-        DexClassLoader = Hack.into(DexClassLoader.class);
-        LexFile = Hack.into("dalvik.system.LexFile");
         Instrumentation = Hack.into("android.app.Instrumentation");
         sIsIgnoreFailure = false;
     }
@@ -154,10 +140,6 @@ public class SysHacks extends Hack.HackDeclaration implements Hack.AssertionFail
         LoadedApk_mResources.ofType(Resources.class);
         LoadedApk_mResDir = LoadedApk.field("mResDir");
         LoadedApk_mResDir.ofType(String.class);
-        LoadedApk_mClassLoader = LoadedApk.field("mClassLoader");
-        LoadedApk_mClassLoader.ofType(ClassLoader.class);
-        LoadedApk_mBaseClassLoader = LoadedApk.field("mBaseClassLoader");
-        LoadedApk_mBaseClassLoader.ofType(ClassLoader.class);
         LoadedApk_mAppDir = LoadedApk.field("mAppDir");
         LoadedApk_mAppDir.ofType(String.class);
         ContextImpl_mResources = ContextImpl.field("mResources");
@@ -187,13 +169,6 @@ public class SysHacks extends Hack.HackDeclaration implements Hack.AssertionFail
         ActivityThread_currentActivityThread = ActivityThread.method("currentActivityThread", new Class[0]);
         AssetManager_addAssetPath = AssetManager.method("addAssetPath", String.class);
         Application_attach = Application.method("attach", Context.class);
-        ClassLoader_findLibrary = ClassLoader.method("findLibrary", String.class);
-        if (LexFile != null && LexFile.getmClass() != null) {
-            LexFile_loadLex = LexFile.method("loadLex", String.class, Integer.TYPE);
-            LexFile_loadClass = LexFile.method("loadClass", String.class, ClassLoader.class);
-            LexFile_close = LexFile.method("close", new Class[0]);
-            DexClassLoader_findClass = DexClassLoader.method("findClass", String.class);
-        }
     }
 
     public static void allConstructors() throws HackAssertionException {
@@ -202,7 +177,7 @@ public class SysHacks extends Hack.HackDeclaration implements Hack.AssertionFail
     public boolean onAssertionFailure(HackAssertionException hackAssertionException) {
         if (!sIsIgnoreFailure) {
             if (this.mExceptionArray == null) {
-                this.mExceptionArray = new AssertionArrayException("atlas hack assert failed");
+                this.mExceptionArray = new AssertionArrayException("Hack assert failed");
             }
             this.mExceptionArray.addException(hackAssertionException);
         }
