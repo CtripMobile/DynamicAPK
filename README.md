@@ -25,6 +25,35 @@ DynamicAPK is already uesed in Ctrip Android App (Simplified Chinese Version). C
 
 * On-demand module (code and resource) downloading and loading 
 
+## Comparasion
+
+* [DynamicLoadApk](https://github.com/singwhatiwanna/dynamic-load-apk)
+	
+	Heavy develpment paradigm transformation: use "that" instead of "this", activity should inherit from their proxy avtivity (The proxy activity manage life cycle).
+	
+	Restrictions of starting activity within module apk.
+	
+	Doesn't support Service and BroadcastReceiver.
+
+* [AndroidDynamicLoader](https://github.com/mmin18/AndroidDynamicLoader)
+
+	Heavy develpment paradigm transformation: 
+	
+	Changes the usage of resources: `MyResources.getResource(Me.class)` instead of `context.getResources()`. 
+	
+	Use Fragment as UI container, each page is implemented in Fragment instead of Activity. So you need use URL mapping to start new page.
+
+* [android-pluginmgr](https://github.com/houkx/android-pluginmgr)
+	
+	Not tested in released App.
+	
+	Doesn't support Service and BroadcastReceiver.
+
+* [DroidPlugin](https://github.com/Qihoo360/DroidPlugin) from Qihu360
+	
+	Very interesting framework! DroidPlugin can start totally independent app (not installed) in your app. The features are more suitable for Qihu360 security app because the bundle apk is totally irrelevant to host apk. 
+	
+	Doesn't support custom nitification.  
 
 ## Implementation
 
@@ -34,7 +63,7 @@ We focus on aapt, javac, proguard and dex process. The key of dynamic loading is
 
 ### Code compilation and loading
 
-Java compilation is nothing special, while class loading needs some hacking. Android's DexClassLoader has some restrictions, so we use Android's system PathClassLoader. PathClassLoader has a member pathList, as the name suggests it is essentially a List to  load classes from each dex path in the list at runtime. So we can add our dynamically loaded dex at the head of the list. In fact, Google's officialMultiDex library is also implemented by the method. The following snippet shows the details:
+Java compilation is nothing special, while class loading needs some hacking. Android's DexClassLoader has some restrictions, so we use Android's system PathClassLoader. PathClassLoader has a member pathList, as the name suggests it is essentially a List to  load classes from each dex path in the list at runtime. So we can add our dynamically loaded dex at the head of the list. In fact, Google's official MultiDex library is also implemented by the method. The following snippet shows the details:
 
 MultiDex.java
 
@@ -194,7 +223,36 @@ DynamicAPK已经在携程旅行Android App中使用，欢迎关注携程移动�
 
 * 按需下载和加载任意功能模块(包含代码和资源)
 
+## 对比
 
+* [DynamicLoadApk](https://github.com/singwhatiwanna/dynamic-load-apk)
+	
+	迁移成本很重：需要使用『that』而不是『this』，所有activity都需要继承自proxy avtivity（proxy avtivity负责管理所有activity的生命周期）。
+	
+	无法启动apk内部的activity。
+	
+	不支持Service和BroadcastReceiver。
+
+* [AndroidDynamicLoader](https://github.com/mmin18/AndroidDynamicLoader)
+
+	迁移成本很重：
+	
+	使用资源时要用`MyResources.getResource(Me.class)`而不是`context.getResources()`
+	
+	使用Fragment作为UI容器，所有每个页面都是使用Fragment而不是Activity，需要使用URL mapping才能实现页面跳转。
+	
+* [android-pluginmgr](https://github.com/houkx/android-pluginmgr)
+	
+	未经过生产环境App测试。
+	
+	不支持Service和BroadcastReceiver。
+
+* [DroidPlugin](https://github.com/Qihoo360/DroidPlugin) from 奇虎360
+	
+	非常有趣的框架！DroidPlugin能够在一个App内启动一个没有安装的App。这个特性可能更适合360的安全产品，因为被启动的App和宿主App完全没有任何关联，相互间不能支持资源和代码调用。
+	
+	不支持自定义推送栏。
+	
 ## 实现细节
 
 更深入的分析文章详见 [InfoQ -《携程Android App插件化和动态加载实践》](http://www.infoq.com/cn/articles/ctrip-android-dynamic-loading)
