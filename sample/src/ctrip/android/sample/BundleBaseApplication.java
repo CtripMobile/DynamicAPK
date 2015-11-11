@@ -17,6 +17,7 @@ import java.util.zip.ZipFile;
 
 import ctrip.android.bundle.framework.BundleCore;
 import ctrip.android.bundle.framework.BundleException;
+import ctrip.android.bundle.hotpatch.HotPatchManager;
 
 /**
  * Created by yb.wang on 15/10/28.
@@ -39,9 +40,11 @@ public class BundleBaseApplication extends Application {
             if (!TextUtils.equals(bundleKey, lastBundleKey)) {
                 properties.put("osgi.init", "true");
                 isDexInstalled = false;
+                HotPatchManager.getInstance().purge();
             }
             BundleCore.getInstance().startup(properties);
             if (isDexInstalled) {
+                HotPatchManager.getInstance().run();
                 BundleCore.getInstance().run();
             } else {
                 new Thread(new Runnable() {

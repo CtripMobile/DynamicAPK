@@ -1,9 +1,7 @@
 package ctrip.android.bundle.hack;
 
-import android.app.Activity;
 import android.app.Application;
 import android.app.Instrumentation;
-import android.content.ContextWrapper;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,7 +11,7 @@ import java.util.Map;
 
 /**
  * Created by yb.wang on 15/1/5.
- * Android中的ClassLoader Hack
+ * Android中的Resource Hack
  */
 public class AndroidHack {
     private static Object _mLoadedApk;
@@ -65,17 +63,6 @@ public class AndroidHack {
         return _mLoadedApk;
     }
 
-    public static void injectClassLoader(String str, ClassLoader classLoader) throws Exception {
-        Object activityThread = getActivityThread();
-        if (activityThread == null) {
-            throw new Exception("Failed to get ActivityThread.sCurrentActivityThread");
-        }
-        activityThread = getLoadedApk(activityThread, str);
-        if (activityThread == null) {
-            throw new Exception("Failed to get ActivityThread.mLoadedApk");
-        }
-        SysHacks.LoadedApk_mClassLoader.set(activityThread, classLoader);
-    }
 
     public static void injectResources(Application application, Resources resources) throws Exception {
         Object activityThread = getActivityThread();
@@ -89,32 +76,6 @@ public class AndroidHack {
         SysHacks.LoadedApk_mResources.set(loadedApk, resources);
         SysHacks.ContextImpl_mResources.set(application.getBaseContext(), resources);
         SysHacks.ContextImpl_mTheme.set(application.getBaseContext(), null);
-    }
-
-    public static void injectActivityResources(Activity activity, Resources resources) throws Exception {
-        Object activityThread = getActivityThread();
-        if (activityThread == null) {
-            throw new Exception("Failed to get ActivityThread.sCurrentActivityThread");
-        }
-        Object loadedApk = getLoadedApk(activityThread, activity.getPackageName());
-        if (loadedApk == null) {
-            throw new Exception("Failed to get ActivityThread.mLoadedApk");
-        }
-        SysHacks.LoadedApk_mResources.set(loadedApk, resources);
-        SysHacks.ContextImpl_mResources.set(activity.getBaseContext(), resources);
-        SysHacks.ContextImpl_mTheme.set(activity.getBaseContext(), null);
-    }
-
-    public static ClassLoader currentClassLoader(String str) throws Exception {
-        Object activityThread = getActivityThread();
-        if (activityThread == null) {
-            throw new Exception("Failed to get ActivityThread.sCurrentActivityThread");
-        }
-        activityThread = getLoadedApk(activityThread, str);
-        if (activityThread != null) {
-            return SysHacks.LoadedApk_mClassLoader.get(activityThread);
-        }
-        throw new Exception("Failed to get ActivityThread.mLoadedApk");
     }
 
     public static Instrumentation getInstrumentation() throws Exception {
@@ -133,7 +94,4 @@ public class AndroidHack {
         SysHacks.ActivityThread_mInstrumentation.set(activityThread, instrumentation);
     }
 
-    public static void injectContextHook(ContextWrapper contextWrapper, ContextWrapper contextWrapper2) {
-        SysHacks.ContextWrapper_mBase.set(contextWrapper, contextWrapper2);
-    }
 }
