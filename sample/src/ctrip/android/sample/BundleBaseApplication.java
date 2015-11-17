@@ -38,7 +38,7 @@ public class BundleBaseApplication extends Application {
             String lastBundleKey = sharedPreferences.getString("last_bundle_key", "");
             bundleKey = buildBundleKey();
             if (!TextUtils.equals(bundleKey, lastBundleKey)) {
-                properties.put("osgi.init", "true");
+                properties.put("ctrip.bundle.init", "true");
                 isDexInstalled = false;
                 HotPatchManager.getInstance().purge();
             }

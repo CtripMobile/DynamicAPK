@@ -74,9 +74,9 @@ public final class Framework {
                 deleteDirectory(file);
             }
             file.mkdirs();
-
-        } else {
             storeProfile();
+        } else {
+            restoreProfile();
         }
 
         long endTimeMillis = System.currentTimeMillis() - currentTimeMillis;
@@ -157,9 +157,7 @@ public final class Framework {
     private static void storeMetadata() {
         try {
             DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(new File(STORAGE_LOCATION, "meta")));
-
             dataOutputStream.writeLong(nextBundleID);
-
             dataOutputStream.flush();
             dataOutputStream.close();
         } catch (Throwable e) {
@@ -173,7 +171,6 @@ public final class Framework {
             File file = new File(STORAGE_LOCATION, "meta");
             if (file.exists()) {
                 DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file));
-                int readInt = dataInputStream.readInt();
                 nextBundleID = dataInputStream.readLong();
                 dataInputStream.close();
                 File file2 = new File(STORAGE_LOCATION);
@@ -190,7 +187,7 @@ public final class Framework {
                     }
                     i++;
                 }
-                return readInt;
+                return 1;
             }
 //            System.out.println("Profile not found, performing clean start ...");
             log.log("Profile not found, performing clean start ...", Logger.LogLevel.DBUG);
