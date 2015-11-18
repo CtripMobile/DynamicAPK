@@ -45,6 +45,17 @@ public class BundleBaseApplication extends Application {
             BundleCore.getInstance().startup(properties);
             if (isDexInstalled) {
                 HotPatchManager.getInstance().run();
+                File libsPath = new File(getFilesDir() + "/storage/");
+                try {
+                    for (File bundleDir : libsPath.listFiles()){
+                        if (!bundleDir.isDirectory()){  //Skip meta file.
+                            continue;
+                        }
+                        BundleCore.getInstance().loadBundle(bundleDir.getAbsolutePath());
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
                 BundleCore.getInstance().run();
             } else {
                 new Thread(new Runnable() {
