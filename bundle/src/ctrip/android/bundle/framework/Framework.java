@@ -227,5 +227,14 @@ public final class Framework {
         return bundleImpl;
     }
 
+    static BundleImpl loadBundle(String location) throws Exception {
+        BundleImpl bundleImpl = (BundleImpl) getBundle(location);
+        if (bundleImpl != null) {
+            return bundleImpl;
+        }
+        bundleImpl = new BundleImpl(new File(location));
+        bundles.put(location, bundleImpl);
+        return bundleImpl;
+    }
 
 }

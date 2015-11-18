@@ -121,6 +121,9 @@ public class BundleCore {
         return Framework.installNewBundle(location, inputStream);
     }
 
+    public Bundle loadBundle(String location) throws Exception {
+        return Framework.loadBundle(location);
+    }
 
     public void updateBundle(String location, InputStream inputStream) throws BundleException {
         Bundle bundle = Framework.getBundle(location);
