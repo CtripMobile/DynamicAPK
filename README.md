@@ -53,7 +53,7 @@ DynamicAPK is already uesed in Ctrip Android App (Simplified Chinese Version). C
 	
 	Very interesting framework! DroidPlugin can start totally independent app (not installed) in your app. The features are more suitable for Qihu360 security app because the bundle apk is totally irrelevant to host apk. 
 	
-	Doesn't support custom nitification.  
+	Doesn't support custom notification.  
 
 ## Implementation
 
