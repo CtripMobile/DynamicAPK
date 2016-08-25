@@ -45,7 +45,9 @@ public class BundlePathLoader {
             throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException,InstantiationException,
             InvocationTargetException, NoSuchMethodException, IOException {
         if (!files.isEmpty()) {
-            if (Build.VERSION.SDK_INT >= 23) {
+            if (Build.VERSION.SDK_INT >= 24) {
+                V24.install(loader, files, dexDir, isHotFix);
+            } else if (Build.VERSION.SDK_INT >= 23) {
                 V23.install(loader, files, dexDir,isHotFix);
             }else if (Build.VERSION.SDK_INT >= 19) {
                 V19.install(loader, files, dexDir,isHotFix);
@@ -154,6 +156,28 @@ public class BundlePathLoader {
         }
     }
 
+    private static final class V24 {
+
+        private static void install(ClassLoader loader, List<File> additionalClassPathEntries,
+                                    File optimizedDirectory,boolean isHotFix)
+                throws IllegalArgumentException, IllegalAccessException,
+                NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException {
+
+            Field pathListField = findField(loader, "pathList");
+            Object dexPathList = pathListField.get(loader);
+            Field dexElementField = findField(dexPathList, "dexElements");
+            Object dexElements = dexElementField.get(dexPathList);
+            Class<?> elementType = dexElementField.getType().getComponentType();
+            Method loadDex = findMethod(dexPathList, "loadDexFile", File.class, File.class, ClassLoader.class, dexElementField.getType());
+            Object dex = loadDex.invoke(dexPathList, additionalClassPathEntries.get(0), optimizedDirectory, loader, dexElements);
+            Constructor<?> constructor = elementType.getConstructor(File.class, boolean.class, File.class, DexFile.class);
+            Object element = constructor.newInstance(new File(""), false, additionalClassPathEntries.get(0), dex);
+            Object[] newEles=new Object[1];
+            newEles[0]=element;
+            expandFieldArray(dexPathList, "dexElements",newEles,isHotFix);
+        }
+
+    }
 
     private static final class V23 {
 
