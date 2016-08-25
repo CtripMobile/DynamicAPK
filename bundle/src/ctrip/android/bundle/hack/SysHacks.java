@@ -112,7 +112,11 @@ public class SysHacks extends Hack.HackDeclaration implements Hack.AssertionFail
             LoadedApk = Hack.into("android.app.LoadedApk");
         }
         ActivityThread = Hack.into("android.app.ActivityThread");
-        Resources = Hack.into(Resources.class);
+        if(Build.VERSION.SDK_INT >= 24) {
+            Resources = Hack.into("android.content.res.ResourcesImpl");
+        } else {
+            Resources = Hack.into("android.content.res.Resources");
+        }
         Application = Hack.into(Application.class);
         AssetManager = Hack.into(AssetManager.class);
         IPackageManager = Hack.into("android.content.pm.IPackageManager");
