@@ -2660,6 +2660,7 @@ status_t writeResourceSymbols(Bundle* bundle, const sp<AaptAssets>& assets,
                 className, 0, bundle->getNonConstantId(), emitCallback);
         fclose(fp);
         if (err != NO_ERROR) {
+        	free(dest_r_path);
             return err;
         }
 
@@ -2672,6 +2673,7 @@ status_t writeResourceSymbols(Bundle* bundle, const sp<AaptAssets>& assets,
             if (fp == NULL) {
                 fprintf(stderr, "ERROR: Unable to open text symbol file %s: %s\n",
                         textDest.string(), strerror(errno));
+                free(dest_r_path);
                 return UNKNOWN_ERROR;
             }
             if (bundle->getVerbose()) {
@@ -2682,6 +2684,7 @@ status_t writeResourceSymbols(Bundle* bundle, const sp<AaptAssets>& assets,
                     className);
             fclose(fp);
             if (err != NO_ERROR) {
+            	free(dest_r_path);
                 return err;
             }
         }
