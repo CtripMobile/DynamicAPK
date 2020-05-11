@@ -52,18 +52,22 @@ main(int argc, char** argv)
 
     if (size < 0 || amt < 0) {
         fprintf(stderr, "apk: error determining file size: %s\n", filename);
+        close(fd);
         return 1;
     }
 
     buf = malloc(size);
     if (buf == NULL) {
         fprintf(stderr, "apk: file too big: %s\n", filename);
+        close(fd);
         return 1;
     }
 
     amt = read(fd, buf, size);
     if (amt != size) {
         fprintf(stderr, "apk: error reading file: %s\n", filename);
+        free(buf);
+        close(fd);
         return 1;
     }
 

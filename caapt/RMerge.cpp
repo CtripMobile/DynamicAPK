@@ -102,6 +102,8 @@ int merge_r_file(const char* public_r_file_path, const char* project_r_file_path
     
     if (public_r_fp == NULL || project_r_fp == NULL) {
         printf("***********Error, read R.java failed, return -2;\n");
+        fclose(public_r_fp);
+        fclose(project_r_fp);
         return -2;
     }
     
@@ -206,6 +208,12 @@ int merge_r_file(const char* public_r_file_path, const char* project_r_file_path
     }
     else {
         printf("***********R.java file读取长度有错误, return -3;\n");
+        fclose(public_r_fp);
+        fclose(project_r_fp);
+        c_free(public_r_str);
+    	c_free(public_r_formated_str);
+    	c_free(project_r_str);
+    	c_free(output_r_str);
         return -3;
     }
     
